@@ -56,6 +56,8 @@ fn main() -> ! {
         // UART RX (characters received by RP2040) on pin 2 (GPIO1)
         pins.gpio1.into_mode::<bsp::hal::gpio::FunctionUart>(),
     );
+
+    // set the MIDI baud rate
     let mut conf = bsp::hal::uart::common_configs::_9600_8_N_1;
     conf.baudrate = HertzU32::from_raw(31250);
     let uart = bsp::hal::uart::UartPeripheral::new(pac.UART0, uart_pins, &mut pac.RESETS)
@@ -69,9 +71,21 @@ fn main() -> ! {
     loop {
         midi_in.poll_uart();
 
-        if let Some(_message) = midi_in.get_message() {
+        if let Some(message) = midi_in.get_message() {
             //the hprintln is taking long time so a lot of messages are lost in the meantime
-            info!("midi message received\r\n");
+            match message {
+                midi_port::MidiMessage::ControlChange {
+                    channel,
+                    controller,
+                    value,
+                } => {
+                    info!(
+                        "midi message received {} {} {}\r\n",
+                        channel, controller, value
+                    );
+                }
+                _ => info!("unhandled message"),
+            }
         }
     }
 }
