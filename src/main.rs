@@ -1,6 +1,5 @@
-//! Blinks the LED on a Pico board
+//! Midi message converter
 //!
-//! This will blink an LED attached to GP25, which is the pin the Pico uses for the on-board LED.
 #![no_std]
 #![no_main]
 
@@ -27,7 +26,6 @@ use bsp::hal::{
 fn main() -> ! {
     info!("Program start");
     let mut pac = pac::Peripherals::take().unwrap();
-    let core = pac::CorePeripherals::take().unwrap();
     let mut watchdog = Watchdog::new(pac.WATCHDOG);
     let sio = Sio::new(pac.SIO);
 
@@ -64,7 +62,7 @@ fn main() -> ! {
         .enable(conf, clocks.peripheral_clock.freq())
         .unwrap();
 
-    uart.write_full_blocking(b"UART example\r\n");
+    //   uart.write_full_blocking(b"UART example\r\n");
 
     let mut midi_in = MidiInPort::new(uart);
 
