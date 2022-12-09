@@ -6,7 +6,7 @@
 use bsp::entry;
 use defmt::*;
 use defmt_rtt as _;
-use embedded_midi::{MidiIn, MidiOut};
+use embedded_midi::{MidiIn, MidiMessage, MidiOut};
 use fugit::HertzU32;
 use nb::block;
 use panic_probe as _;
@@ -73,9 +73,13 @@ fn main() -> ! {
 
     loop {
         if let Ok(event) = block!(midi_in.read()) {
-            midi_out.write(&event).ok();
+            midi_out.write(resolve(&event)).ok();
         }
     }
+}
+
+fn resolve(m: &MidiMessage) -> &MidiMessage {
+    return m;
 }
 
 // End of file
