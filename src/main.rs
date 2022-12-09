@@ -6,7 +6,7 @@
 use bsp::entry;
 use defmt::*;
 use defmt_rtt as _;
-use embedded_midi;
+use embedded_midi::{MidiIn, MidiOut};
 use fugit::HertzU32;
 use nb::block;
 use panic_probe as _;
@@ -65,10 +65,12 @@ fn main() -> ! {
         .enable(conf, clocks.peripheral_clock.freq())
         .unwrap();
 
-    //   uart.write_full_blocking(b"UART example\r\n");
+    // Configure Midi
+    let (rx, tx) = uart.split();
 
-    let mut midi_in = embedded_midi::MidiIn::new(uart);
-    let mut midi_out = embedded_midi::MidiOut::new(uart);
+    let mut midi_in = MidiIn::new(rx);
+    let mut midi_out = MidiOut::new(tx);
+
     loop {
         if let Ok(event) = block!(midi_in.read()) {
             midi_out.write(&event).ok();
