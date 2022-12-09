@@ -13,9 +13,10 @@ defmt-rtt = "0.3"
 panic-probe = { version = "0.3", features = ["print-defmt"] }
 
 fugit = "0.3"
-midi-port = "0.1.0"
-
+nb = "1.0.0"
+embedded-midi = "0.1.2" 
 rp-pico = "0.5"
+rp2040-hal = { version = "0.6.1", features = ["eh1_0_alpha"] }
 
 # but you can use any BSP. Uncomment this to use the pro_micro_rp2040 BSP instead
 # sparkfun-pro-micro-rp2040 = "0.3"

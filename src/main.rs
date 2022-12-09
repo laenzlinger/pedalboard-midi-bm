@@ -6,8 +6,9 @@
 use bsp::entry;
 use defmt::*;
 use defmt_rtt as _;
+use embedded_midi;
 use fugit::HertzU32;
-use midi_port::*;
+use nb::block;
 use panic_probe as _;
 
 // Provide an alias for our BSP so we can switch targets quickly.
@@ -66,26 +67,11 @@ fn main() -> ! {
 
     //   uart.write_full_blocking(b"UART example\r\n");
 
-    let mut midi_in = MidiInPort::new(uart);
-
+    let mut midi_in = embedded_midi::MidiIn::new(uart);
+    let mut midi_out = embedded_midi::MidiOut::new(uart);
     loop {
-        midi_in.poll_uart();
-
-        if let Some(message) = midi_in.get_message() {
-            //the hprintln is taking long time so a lot of messages are lost in the meantime
-            match message {
-                midi_port::MidiMessage::ControlChange {
-                    channel,
-                    controller,
-                    value,
-                } => {
-                    info!(
-                        "midi message received {} {} {}\r\n",
-                        channel, controller, value
-                    );
-                }
-                _ => info!("unhandled message"),
-            }
+        if let Ok(event) = block!(midi_in.read()) {
+            midi_out.write(&event).ok();
         }
     }
 }
