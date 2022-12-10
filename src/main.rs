@@ -6,7 +6,7 @@
 use bsp::entry;
 use defmt::*;
 use defmt_rtt as _;
-use embedded_midi::{Channel, Control, MidiIn, MidiMessage, MidiOut};
+use embedded_midi::{Channel, Control, MidiIn, MidiMessage, MidiOut, Program};
 use fugit::HertzU32;
 use nb::block;
 use panic_probe as _;
@@ -86,14 +86,27 @@ fn main() -> ! {
 }
 
 const PLETHORA_CHANNEL: Channel = Channel::new(1);
-const XTONE_CHANNEL: Channel = Channel::new(0);
 
 const HIGH_VALUE: midi_types::Value7 = midi_types::Value7::new(127);
 
-const BOARD_UP: MidiMessage =
-    MidiMessage::ControlChange(PLETHORA_CHANNEL, Control::new(95), HIGH_VALUE);
-const BOARD_DOWN: MidiMessage =
-    MidiMessage::ControlChange(PLETHORA_CHANNEL, Control::new(94), HIGH_VALUE);
+enum Plethora {
+    Board(u8),
+    BoardUp,
+    BoardDown,
+}
+impl Plethora {
+    fn midi_message(&self) -> MidiMessage {
+        match *self {
+            Plethora::BoardUp => {
+                MidiMessage::ControlChange(PLETHORA_CHANNEL, Control::new(95), HIGH_VALUE)
+            }
+            Plethora::BoardDown => {
+                MidiMessage::ControlChange(PLETHORA_CHANNEL, Control::new(94), HIGH_VALUE)
+            }
+            Plethora::Board(nr) => MidiMessage::ProgramChange(PLETHORA_CHANNEL, Program::new(nr)),
+        }
+    }
+}
 
 fn resolve(event: MidiMessage) -> Option<MidiMessage> {
     match event {
@@ -110,6 +123,7 @@ fn resolve(event: MidiMessage) -> Option<MidiMessage> {
     }
 }
 
+const XTONE_CHANNEL: Channel = Channel::new(0);
 const XTONE_GREEN: [Control; 6] = [
     Control::new(10),
     Control::new(22),
@@ -120,12 +134,16 @@ const XTONE_GREEN: [Control; 6] = [
 ];
 
 const XTONE_GREEN_A: Control = XTONE_GREEN[0];
-const XTONE_GREEN_C: Control = XTONE_GREEN[3];
+const XTONE_GREEN_C: Control = XTONE_GREEN[2];
+const XTONE_GREEN_D: Control = XTONE_GREEN[3];
+const XTONE_GREEN_F: Control = XTONE_GREEN[5];
 
 fn resolve_xtone(control: Control) -> Option<MidiMessage> {
     match control {
-        XTONE_GREEN_A => Some(BOARD_DOWN),
-        XTONE_GREEN_C => Some(BOARD_UP),
+        XTONE_GREEN_A => Some(Plethora::BoardDown.midi_message()),
+        XTONE_GREEN_D => Some(Plethora::BoardUp.midi_message()),
+        XTONE_GREEN_C => Some(Plethora::Board(20).midi_message()),
+        XTONE_GREEN_F => Some(Plethora::Board(21).midi_message()),
         _ => None,
     }
 }
