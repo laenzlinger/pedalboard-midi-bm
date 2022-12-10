@@ -85,9 +85,10 @@ fn main() -> ! {
     }
 }
 
-const PLETHORA_CHANNEL: Channel = Channel::new(2);
+const PLETHORA_CHANNEL: Channel = Channel::new(1);
+const RC500_CHANNEL: Channel = Channel::new(0);
 
-const HIGH_VALUE: midi_types::Value7 = midi_types::Value7::new(127);
+const HIGH_VALUE: midi_types::Value7 = midi_types::Value7::new(100);
 
 enum Plethora {
     Board(u8),
@@ -104,6 +105,17 @@ impl Plethora {
                 MidiMessage::ControlChange(PLETHORA_CHANNEL, Control::new(94), HIGH_VALUE)
             }
             Plethora::Board(nr) => MidiMessage::ProgramChange(PLETHORA_CHANNEL, Program::new(nr)),
+        }
+    }
+}
+
+enum RC500 {
+    Memory(u8),
+}
+impl RC500 {
+    fn midi_message(&self) -> MidiMessage {
+        match *self {
+            RC500::Memory(nr) => MidiMessage::ProgramChange(RC500_CHANNEL, Program::new(nr)),
         }
     }
 }
@@ -135,11 +147,11 @@ const XTONE_GREEN_F: Control = Control::new(26);
 fn resolve_xtone(control: Control) -> Option<MidiMessage> {
     match control {
         XTONE_GREEN_A => Some(Plethora::BoardDown.midi_message()),
-        XTONE_GREEN_B => None,
-        XTONE_GREEN_C => Some(Plethora::Board(20).midi_message()),
+        XTONE_GREEN_B => Some(RC500::Memory(20).midi_message()),
+        XTONE_GREEN_C => Some(Plethora::Board(29).midi_message()),
         XTONE_GREEN_D => Some(Plethora::BoardUp.midi_message()),
-        XTONE_GREEN_E => None,
-        XTONE_GREEN_F => Some(Plethora::Board(21).midi_message()),
+        XTONE_GREEN_E => Some(RC500::Memory(21).midi_message()),
+        XTONE_GREEN_F => Some(Plethora::Board(30).midi_message()),
         _ => None,
     }
 }
