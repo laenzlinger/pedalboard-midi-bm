@@ -134,15 +134,19 @@ const XTONE_GREEN: [Control; 6] = [
 ];
 
 const XTONE_GREEN_A: Control = XTONE_GREEN[0];
+const XTONE_GREEN_B: Control = XTONE_GREEN[1];
 const XTONE_GREEN_C: Control = XTONE_GREEN[2];
 const XTONE_GREEN_D: Control = XTONE_GREEN[3];
+const XTONE_GREEN_E: Control = XTONE_GREEN[4];
 const XTONE_GREEN_F: Control = XTONE_GREEN[5];
 
 fn resolve_xtone(control: Control) -> Option<MidiMessage> {
     match control {
         XTONE_GREEN_A => Some(Plethora::BoardDown.midi_message()),
-        XTONE_GREEN_D => Some(Plethora::BoardUp.midi_message()),
+        XTONE_GREEN_B => None,
         XTONE_GREEN_C => Some(Plethora::Board(20).midi_message()),
+        XTONE_GREEN_D => Some(Plethora::BoardUp.midi_message()),
+        XTONE_GREEN_E => None,
         XTONE_GREEN_F => Some(Plethora::Board(21).midi_message()),
         _ => None,
     }
