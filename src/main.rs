@@ -85,7 +85,7 @@ fn main() -> ! {
     }
 }
 
-const PLETHORA_CHANNEL: Channel = Channel::new(1);
+const PLETHORA_CHANNEL: Channel = Channel::new(2);
 
 const HIGH_VALUE: midi_types::Value7 = midi_types::Value7::new(127);
 
