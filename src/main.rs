@@ -124,21 +124,13 @@ fn resolve(event: MidiMessage) -> Option<MidiMessage> {
 }
 
 const XTONE_CHANNEL: Channel = Channel::new(0);
-const XTONE_GREEN: [Control; 6] = [
-    Control::new(10),
-    Control::new(22),
-    Control::new(11),
-    Control::new(24),
-    Control::new(25),
-    Control::new(26),
-];
 
-const XTONE_GREEN_A: Control = XTONE_GREEN[0];
-const XTONE_GREEN_B: Control = XTONE_GREEN[1];
-const XTONE_GREEN_C: Control = XTONE_GREEN[2];
-const XTONE_GREEN_D: Control = XTONE_GREEN[3];
-const XTONE_GREEN_E: Control = XTONE_GREEN[4];
-const XTONE_GREEN_F: Control = XTONE_GREEN[5];
+const XTONE_GREEN_A: Control = Control::new(10);
+const XTONE_GREEN_B: Control = Control::new(22);
+const XTONE_GREEN_C: Control = Control::new(11);
+const XTONE_GREEN_D: Control = Control::new(24);
+const XTONE_GREEN_E: Control = Control::new(25);
+const XTONE_GREEN_F: Control = Control::new(26);
 
 fn resolve_xtone(control: Control) -> Option<MidiMessage> {
     match control {
