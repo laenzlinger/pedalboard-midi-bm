@@ -8,7 +8,7 @@ The midi devices are daisy chained with MIDI cables in the following order
 XSONIC XTONE => MIDI Controller => Plethora X3 => RC500
 ```
 
-Since the XSONIC XTONE is very invflexible this MIDI Controller takes the Events of the XTONE inputs and coverts them into
+Since the XSONIC XTONE MIDI implemention is static, this MIDI controller converts the events of the XTONE inputs into
 useful MIDI control messages for the rest of the MIDI controllable pedals on my board.
 
 ## Hardware
