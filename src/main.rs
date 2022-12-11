@@ -125,13 +125,13 @@ fn resolve(event: MidiMessage) -> Option<MidiMessage> {
     match event {
         midi_types::MidiMessage::ControlChange(channel, control, _value) => {
             if XTONE_CHANNEL == channel {
-                return resolve_xtone(control);
+                resolve_xtone(control)
             } else {
-                return None;
+                None
             }
         }
         _ => {
-            return None;
+            None
         }
     }
 }
