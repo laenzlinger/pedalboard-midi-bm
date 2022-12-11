@@ -5,7 +5,7 @@ This project implements a MIDI controller for my pedalboard:
 The midi devices are daisy chained with MIDI cables in the following order
 
 ```
-XSONIC XTONE => MIDI Controller => Plethora X3 => RC500
+XSONIC XTONE => this MIDI Adapter => Plethora X3 => RC500
 ```
 
 Since the XSONIC XTONE MIDI implemention is static, this MIDI controller converts the events of the XTONE inputs into
