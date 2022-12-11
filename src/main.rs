@@ -130,9 +130,7 @@ fn resolve(event: MidiMessage) -> Option<MidiMessage> {
                 None
             }
         }
-        _ => {
-            None
-        }
+        _ => None,
     }
 }
 
