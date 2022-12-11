@@ -6,8 +6,9 @@
 use bsp::entry;
 use defmt::*;
 use defmt_rtt as _;
-use embedded_midi::{Channel, Control, MidiIn, MidiMessage, MidiOut, Program};
+use embedded_midi::{MidiIn, MidiOut};
 use fugit::HertzU32;
+use midi_types::{Channel, Control, MidiMessage, Program};
 use nb::block;
 use panic_probe as _;
 
@@ -122,7 +123,7 @@ impl RC500 {
 
 fn resolve(event: MidiMessage) -> Option<MidiMessage> {
     match event {
-        embedded_midi::MidiMessage::ControlChange(channel, control, _value) => {
+        midi_types::MidiMessage::ControlChange(channel, control, _value) => {
             if XTONE_CHANNEL == channel {
                 return resolve_xtone(control);
             } else {
