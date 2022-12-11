@@ -1,4 +1,4 @@
-# Pedalboard Midi Controller
+# Pedalboard Midi Adapter
 
 This project implements a MIDI controller for my pedalboard:
 
