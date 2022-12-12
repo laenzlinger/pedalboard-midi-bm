@@ -17,6 +17,7 @@ The target hardware is a Adafruit [MIDI Feather Wing](https://www.adafruit.com/p
 [Feather RP2040](https://www.adafruit.com/product/4884)
 
 ### Feather stack
+
 ![Feather stack](doc/feather1.png)
 ![Feather stack](doc/feather2.png)
 
