@@ -23,6 +23,7 @@ use bsp::{
         clocks::{init_clocks_and_plls, Clock},
         pac,
         sio::Sio,
+        uart::{DataBits, StopBits, UartConfig, UartPeripheral},
         watchdog::Watchdog,
     },
     Pins, XOSC_CRYSTAL_FREQ,
@@ -61,13 +62,13 @@ fn main() -> ! {
     );
 
     // set the MIDI baud rate
-    let conf = bsp::hal::uart::UartConfig::new(
+    let conf = UartConfig::new(
         HertzU32::from_raw(31250),
-        bsp::hal::uart::DataBits::Eight,
+        DataBits::Eight,
         None,
-        bsp::hal::uart::StopBits::One,
+        StopBits::One,
     );
-    let uart = bsp::hal::uart::UartPeripheral::new(pac.UART0, uart_pins, &mut pac.RESETS)
+    let uart = UartPeripheral::new(pac.UART0, uart_pins, &mut pac.RESETS)
         .enable(conf, clocks.peripheral_clock.freq())
         .unwrap();
 
