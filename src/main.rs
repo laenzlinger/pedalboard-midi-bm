@@ -5,7 +5,7 @@
 
 pub mod pedalboard;
 
-use bsp::entry;
+use adafruit_feather_rp2040::entry;
 use defmt::*;
 use defmt_rtt as _;
 use embedded_midi::{MidiIn, MidiOut};
@@ -15,14 +15,17 @@ use panic_probe as _;
 
 // Provide an alias for our BSP so we can switch targets quickly.
 // Uncomment the BSP you included in Cargo.toml, the rest of the code does not need to change.
-use rp_pico as bsp;
+use adafruit_feather_rp2040 as bsp;
 // use sparkfun_pro_micro_rp2040 as bsp;
 
-use bsp::hal::{
-    clocks::{init_clocks_and_plls, Clock},
-    pac,
-    sio::Sio,
-    watchdog::Watchdog,
+use bsp::{
+    hal::{
+        clocks::{init_clocks_and_plls, Clock},
+        pac,
+        sio::Sio,
+        watchdog::Watchdog,
+    },
+    Pins, XOSC_CRYSTAL_FREQ,
 };
 
 #[entry]
@@ -33,9 +36,8 @@ fn main() -> ! {
     let sio = Sio::new(pac.SIO);
 
     // External high-speed crystal on the pico board is 12Mhz
-    let external_xtal_freq_hz = 12_000_000u32;
     let clocks = init_clocks_and_plls(
-        external_xtal_freq_hz,
+        XOSC_CRYSTAL_FREQ,
         pac.XOSC,
         pac.CLOCKS,
         pac.PLL_SYS,
@@ -46,7 +48,7 @@ fn main() -> ! {
     .ok()
     .unwrap();
 
-    let pins = bsp::Pins::new(
+    let pins = Pins::new(
         pac.IO_BANK0,
         pac.PADS_BANK0,
         sio.gpio_bank0,
@@ -54,15 +56,17 @@ fn main() -> ! {
     );
 
     let uart_pins = (
-        // UART TX (characters sent from RP2040) on pin 1 (GPIO0)
-        pins.gpio0.into_mode::<bsp::hal::gpio::FunctionUart>(),
-        // UART RX (characters received by RP2040) on pin 2 (GPIO1)
-        pins.gpio1.into_mode::<bsp::hal::gpio::FunctionUart>(),
+        pins.tx.into_mode::<bsp::hal::gpio::FunctionUart>(),
+        pins.rx.into_mode::<bsp::hal::gpio::FunctionUart>(),
     );
 
     // set the MIDI baud rate
-    let mut conf = bsp::hal::uart::common_configs::_9600_8_N_1;
-    conf.baudrate = HertzU32::from_raw(31250);
+    let conf = bsp::hal::uart::UartConfig::new(
+        HertzU32::from_raw(31250),
+        bsp::hal::uart::DataBits::Eight,
+        None,
+        bsp::hal::uart::StopBits::One,
+    );
     let uart = bsp::hal::uart::UartPeripheral::new(pac.UART0, uart_pins, &mut pac.RESETS)
         .enable(conf, clocks.peripheral_clock.freq())
         .unwrap();

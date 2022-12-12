@@ -16,8 +16,8 @@ fugit = "0.3"
 nb = "1.0.0"
 embedded-midi = { git = "https://github.com/rust-midi/embedded-midi", branch = "main" }
 midi-types = { version = "0.1.5", features = ["defmt"] }
-rp-pico = "0.5"
-rp2040-hal = { version = "0.6.1", features = ["eh1_0_alpha"] }
+adafruit-feather-rp2040 = "0.5.0"
+rp2040-hal = { version = "0.7.0", features = ["eh1_0_alpha"] }
 
 # but you can use any BSP. Uncomment this to use the pro_micro_rp2040 BSP instead
 # sparkfun-pro-micro-rp2040 = "0.3"
