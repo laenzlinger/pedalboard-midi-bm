@@ -1,6 +1,6 @@
 [package]
 edition = "2021"
-name = "pico-midi"
+name = "pedalboard-midi"
 version = "0.1.0"
 
 [dependencies]

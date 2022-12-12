@@ -16,6 +16,9 @@ useful MIDI control messages for the rest of the MIDI controllable pedals on my 
 The target hardware is a Adafruit [MIDI Feather Wing](https://www.adafruit.com/product/4740) on top of an Adafruit
 [Feather RP2040](https://www.adafruit.com/product/4884)
 
+### Feather stack
+![Feather stack](doc/feather1.png)
+![Feather stack](doc/feather2.png)
 
 ## Development
 This project was generated with the [RP2040 Project Teamplate](https://github.com/rp-rs/rp2040-project-template)
