@@ -39,10 +39,10 @@ pub fn resolve_xtone(control: Control) -> Vec<MidiMessage, 8> {
 
         XTONE_BLUE_A => RC500::MemUp().midi_messages(),
         XTONE_BLUE_B => RC500::MemDown().midi_messages(),
-        XTONE_BLUE_C => NONE,
-        XTONE_BLUE_D => NONE,
-        XTONE_BLUE_E => RC500::Memory(20).midi_messages(),
-        XTONE_BLUE_F => RC500::Memory(40).midi_messages(),
+        XTONE_BLUE_C => RC500::ClearCurrent().midi_messages(),
+        XTONE_BLUE_D => RC500::ToggleRhythm().midi_messages(),
+        XTONE_BLUE_E => RC500::RhythmVariation().midi_messages(),
+        XTONE_BLUE_F => RC500::LoopEffect().midi_messages(),
 
         XTONE_RED_A => NONE,
         XTONE_RED_B => NONE,

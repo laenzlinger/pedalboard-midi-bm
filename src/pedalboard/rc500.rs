@@ -11,6 +11,10 @@ pub enum RC500 {
     Memory(u8),
     MemUp(),
     MemDown(),
+    ClearCurrent(),
+    ToggleRhythm(),
+    RhythmVariation(),
+    LoopEffect(),
 }
 
 impl RC500 {
@@ -27,7 +31,11 @@ impl RC500 {
                 return messages;
             }
             RC500::MemUp() => toggle(Control::new(1)),
-            RC500::MemDown() => toggle(Control::new(1)),
+            RC500::MemDown() => toggle(Control::new(2)),
+            RC500::ClearCurrent() => toggle(Control::new(3)),
+            RC500::ToggleRhythm() => toggle(Control::new(4)),
+            RC500::RhythmVariation() => toggle(Control::new(5)),
+            RC500::LoopEffect() => toggle(Control::new(5)),
         }
     }
 }
