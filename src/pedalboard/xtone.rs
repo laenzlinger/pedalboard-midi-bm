@@ -28,18 +28,18 @@ const XTONE_RED_F: Control = Control::new(75);
 pub fn resolve_xtone(control: Control) -> Option<MidiMessage> {
     match control {
         XTONE_GREEN_A => Some(Plethora::BoardDown.midi_message()),
-        XTONE_GREEN_B => Some(RC500::Memory(20).midi_message()),
+        XTONE_GREEN_B => None,
         XTONE_GREEN_C => Some(Plethora::Board(29).midi_message()),
         XTONE_GREEN_D => Some(Plethora::BoardUp.midi_message()),
-        XTONE_GREEN_E => Some(RC500::Memory(21).midi_message()),
+        XTONE_GREEN_E => None,
         XTONE_GREEN_F => Some(Plethora::Board(30).midi_message()),
 
-        XTONE_BLUE_A => None,
-        XTONE_BLUE_B => None,
+        XTONE_BLUE_A => Some(RC500::MemUp().midi_message()),
+        XTONE_BLUE_B => Some(RC500::MemDown().midi_message()),
         XTONE_BLUE_C => None,
         XTONE_BLUE_D => None,
-        XTONE_BLUE_E => None,
-        XTONE_BLUE_F => None,
+        XTONE_BLUE_E => Some(RC500::Memory(20).midi_message()),
+        XTONE_BLUE_F => Some(RC500::Memory(40).midi_message()),
 
         XTONE_RED_A => None,
         XTONE_RED_B => None,
