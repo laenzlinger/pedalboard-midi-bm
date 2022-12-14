@@ -81,13 +81,11 @@ fn main() -> ! {
     loop {
         if let Ok(event) = block!(midi_in.read()) {
             info!("received {}", event);
-            match pedalboard::resolve(event) {
-                Some(out) => {
-                    info!("send {}", out);
-                    midi_out.write(&out).ok()
-                }
-                None => None,
-            };
+            let messages = pedalboard::resolve(event);
+            for m in messages.into_iter() {
+                info!("send {}", m);
+                midi_out.write(&m).ok();
+            }
         }
     }
 }

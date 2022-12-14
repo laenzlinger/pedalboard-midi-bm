@@ -1,5 +1,6 @@
 use crate::pedalboard::plethora::Plethora;
 use crate::pedalboard::rc500::RC500;
+use heapless::Vec;
 use midi_types::{Channel, Control, MidiMessage};
 
 pub const CHANNEL: Channel = Channel::new(0);
@@ -25,29 +26,31 @@ const XTONE_RED_D: Control = Control::new(73);
 const XTONE_RED_E: Control = Control::new(74);
 const XTONE_RED_F: Control = Control::new(75);
 
-pub fn resolve_xtone(control: Control) -> Option<MidiMessage> {
+pub const NONE: Vec<MidiMessage, 8> = Vec::new();
+
+pub fn resolve_xtone(control: Control) -> Vec<MidiMessage, 8> {
     match control {
-        XTONE_GREEN_A => Some(Plethora::BoardDown.midi_message()),
-        XTONE_GREEN_B => None,
-        XTONE_GREEN_C => Some(Plethora::Board(29).midi_message()),
-        XTONE_GREEN_D => Some(Plethora::BoardUp.midi_message()),
-        XTONE_GREEN_E => None,
-        XTONE_GREEN_F => Some(Plethora::Board(30).midi_message()),
+        XTONE_GREEN_A => Plethora::BoardDown.midi_messages(),
+        XTONE_GREEN_B => NONE,
+        XTONE_GREEN_C => Plethora::Board(29).midi_messages(),
+        XTONE_GREEN_D => Plethora::BoardUp.midi_messages(),
+        XTONE_GREEN_E => NONE,
+        XTONE_GREEN_F => Plethora::Board(30).midi_messages(),
 
-        XTONE_BLUE_A => Some(RC500::MemUp().midi_message()),
-        XTONE_BLUE_B => Some(RC500::MemDown().midi_message()),
-        XTONE_BLUE_C => None,
-        XTONE_BLUE_D => None,
-        XTONE_BLUE_E => Some(RC500::Memory(20).midi_message()),
-        XTONE_BLUE_F => Some(RC500::Memory(40).midi_message()),
+        XTONE_BLUE_A => RC500::MemUp().midi_messages(),
+        XTONE_BLUE_B => RC500::MemDown().midi_messages(),
+        XTONE_BLUE_C => NONE,
+        XTONE_BLUE_D => NONE,
+        XTONE_BLUE_E => RC500::Memory(20).midi_messages(),
+        XTONE_BLUE_F => RC500::Memory(40).midi_messages(),
 
-        XTONE_RED_A => None,
-        XTONE_RED_B => None,
-        XTONE_RED_C => None,
-        XTONE_RED_D => None,
-        XTONE_RED_E => None,
-        XTONE_RED_F => None,
+        XTONE_RED_A => NONE,
+        XTONE_RED_B => NONE,
+        XTONE_RED_C => NONE,
+        XTONE_RED_D => NONE,
+        XTONE_RED_E => NONE,
+        XTONE_RED_F => NONE,
 
-        _ => None,
+        _ => NONE,
     }
 }
