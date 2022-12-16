@@ -28,7 +28,7 @@ impl RC500 {
                         Program::new(nr - 1),
                     ))
                     .unwrap();
-                return messages;
+                messages
             }
             RC500::MemUp() => toggle(Control::new(1)),
             RC500::MemDown() => toggle(Control::new(2)),
@@ -48,5 +48,5 @@ fn toggle(c: Control) -> Vec<MidiMessage, MAX_CAPACITY> {
     messages
         .push(MidiMessage::ControlChange(RC500_CHANNEL, c, MIN_VALUE))
         .unwrap();
-    return messages;
+    messages
 }

@@ -24,6 +24,6 @@ impl Plethora {
             }
         };
         messages.push(m).unwrap();
-        return messages;
+        messages
     }
 }
