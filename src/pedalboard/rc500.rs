@@ -8,6 +8,7 @@ const MIN_VALUE: Value7 = midi_types::Value7::new(1);
 const MAX_CAPACITY: usize = 8;
 
 pub enum RC500 {
+    #[allow(dead_code)]
     Memory(u8),
     MemUp(),
     MemDown(),
