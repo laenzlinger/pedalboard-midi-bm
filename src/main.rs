@@ -12,6 +12,7 @@ use embedded_midi::{MidiIn, MidiOut};
 use fugit::HertzU32;
 use nb::block;
 use panic_probe as _;
+use pedalboard::rc500::RC500;
 
 // Provide an alias for our BSP so we can switch targets quickly.
 // Uncomment the BSP you included in Cargo.toml, the rest of the code does not need to change.
@@ -78,10 +79,12 @@ fn main() -> ! {
     let mut midi_in = MidiIn::new(rx);
     let mut midi_out = MidiOut::new(tx);
 
+    let mut rc = RC500::new();
     loop {
         if let Ok(event) = block!(midi_in.read()) {
             info!("received {}", event);
-            let messages = pedalboard::resolve(event);
+
+            let messages = pedalboard::handle(event, &mut rc);
             for m in messages.into_iter() {
                 info!("send {}", m);
                 midi_out.write(&m).ok();

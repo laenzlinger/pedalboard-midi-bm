@@ -1,5 +1,5 @@
 use crate::pedalboard::plethora::Plethora;
-use crate::pedalboard::rc500::RC500;
+use crate::pedalboard::rc500::{RC500Event, RC500};
 use heapless::Vec;
 use midi_types::{Channel, Control, MidiMessage, Value7};
 
@@ -31,7 +31,7 @@ const XTONE_RED_EXP: Control = Control::new(1);
 
 pub const NONE: Vec<MidiMessage, 8> = Vec::new();
 
-pub fn resolve_xtone(control: Control, value: Value7) -> Vec<MidiMessage, 8> {
+pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMessage, 8> {
     match control {
         XTONE_GREEN_A => Plethora::Board(29).midi_messages(),
         XTONE_GREEN_B => Plethora::Board(30).midi_messages(),
@@ -41,16 +41,16 @@ pub fn resolve_xtone(control: Control, value: Value7) -> Vec<MidiMessage, 8> {
         XTONE_GREEN_F => NONE,
         XTONE_GREEN_EXP => Plethora::HotKnob(1, value).midi_messages(),
 
-        XTONE_BLUE_A => RC500::ToggleRhythm().midi_messages(),
-        XTONE_BLUE_B => RC500::RhythmVariation().midi_messages(),
-        XTONE_BLUE_C => RC500::LoopEffect().midi_messages(),
-        XTONE_BLUE_D => RC500::MemUp().midi_messages(),
-        XTONE_BLUE_E => RC500::MemDown().midi_messages(),
-        XTONE_BLUE_F => RC500::ClearCurrent().midi_messages(),
+        XTONE_BLUE_A => rc500.midi_messages(RC500Event::ToggleRhythm()),
+        XTONE_BLUE_B => rc500.midi_messages(RC500Event::RhythmVariation()),
+        XTONE_BLUE_C => rc500.midi_messages(RC500Event::LoopEffect()),
+        XTONE_BLUE_D => rc500.midi_messages(RC500Event::MemUp()),
+        XTONE_BLUE_E => rc500.midi_messages(RC500Event::MemDown()),
+        XTONE_BLUE_F => rc500.midi_messages(RC500Event::ClearCurrent()),
         XTONE_BLUE_EXP => Plethora::HotKnob(1, value).midi_messages(),
 
-        XTONE_RED_A => NONE,
-        XTONE_RED_B => NONE,
+        XTONE_RED_A => rc500.midi_messages(RC500Event::RhythmPatternUp()),
+        XTONE_RED_B => rc500.midi_messages(RC500Event::RhythmPatternDown()),
         XTONE_RED_C => NONE,
         XTONE_RED_D => NONE,
         XTONE_RED_E => NONE,
