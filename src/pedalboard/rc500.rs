@@ -36,7 +36,7 @@ impl RC500 {
             RC500::ClearCurrent() => toggle(Control::new(3)),
             RC500::ToggleRhythm() => toggle(Control::new(4)),
             RC500::RhythmVariation() => toggle(Control::new(5)),
-            RC500::LoopEffect() => toggle(Control::new(5)),
+            RC500::LoopEffect() => toggle(Control::new(6)),
         }
     }
 }

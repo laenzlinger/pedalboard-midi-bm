@@ -8,6 +8,7 @@ pub enum Plethora {
     Board(u8),
     BoardUp,
     BoardDown,
+    HotKnob(u8, Value7),
 }
 impl Plethora {
     pub fn midi_messages(&self) -> Vec<MidiMessage, 8> {
@@ -21,6 +22,9 @@ impl Plethora {
             }
             Plethora::Board(nr) => {
                 MidiMessage::ProgramChange(PLETHORA_CHANNEL, Program::new(nr - 1))
+            }
+            Plethora::HotKnob(nr, value) => {
+                MidiMessage::ControlChange(PLETHORA_CHANNEL, Control::new(106 + nr), value)
             }
         };
         messages.push(m).unwrap();

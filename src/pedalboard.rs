@@ -7,9 +7,9 @@ use midi_types::MidiMessage;
 
 pub fn resolve(event: MidiMessage) -> Vec<MidiMessage, 8> {
     match event {
-        midi_types::MidiMessage::ControlChange(channel, control, _value) => {
+        midi_types::MidiMessage::ControlChange(channel, control, value) => {
             if xtone::CHANNEL == channel {
-                xtone::resolve_xtone(control)
+                xtone::resolve_xtone(control, value)
             } else {
                 xtone::NONE
             }
