@@ -11,49 +11,48 @@ const PATTERNS: [u8; 58] = [
     106, 109, 111, 113, 115, 117, 120, 122, 124, 126,
 ];
 
+const DRUMKITS: [u8; 16] = [
+    0, 8, 17, 26, 35, 43, 51, 59, 68, 76, 85, 94, 102, 110, 118, 126,
+];
+
 const MAX_CAPACITY: usize = 8;
 
-struct Kit {
-    current: u8,
-}
-
-impl Kit {
-    fn new() -> Self {
-        Self { current: 0 }
-    }
-}
-
-struct Pattern {
+struct BidirectionalIterator {
     current: usize,
+    control: Control,
 }
 
-impl Pattern {
-    fn new() -> Self {
-        Self { current: 0 }
+impl BidirectionalIterator {
+    fn new(control: Control) -> Self {
+        Self {
+            current: 0,
+            control,
+        }
     }
-    fn up(&mut self) -> Vec<MidiMessage, MAX_CAPACITY> {
-        if (self.current) < PATTERNS.len() - 1 {
+
+    fn up(&mut self, values: &[u8]) -> Vec<MidiMessage, MAX_CAPACITY> {
+        if (self.current) < values.len() - 1 {
             self.current += 1;
         } else {
             self.current = 0
         }
-        self.current()
+        self.current(values)
     }
-    fn down(&mut self) -> Vec<MidiMessage, MAX_CAPACITY> {
+    fn down(&mut self, values: &[u8]) -> Vec<MidiMessage, MAX_CAPACITY> {
         if (self.current) > 0 {
             self.current -= 1;
         } else {
-            self.current = PATTERNS.len() - 1
+            self.current = values.len() - 1
         }
-        self.current()
+        self.current(values)
     }
-    fn current(&self) -> Vec<MidiMessage, MAX_CAPACITY> {
+    fn current(&self, values: &[u8]) -> Vec<MidiMessage, MAX_CAPACITY> {
         let mut messages: Vec<MidiMessage, MAX_CAPACITY> = Vec::new();
         messages
             .push(MidiMessage::ControlChange(
                 RC500_CHANNEL,
-                Control::new(7),
-                Value7::new(PATTERNS[self.current]),
+                self.control,
+                Value7::new(values[self.current]),
             ))
             .unwrap();
         messages
@@ -61,8 +60,8 @@ impl Pattern {
 }
 
 pub struct RC500 {
-    kit: Kit,
-    pattern: Pattern,
+    drumkits: BidirectionalIterator,
+    patterns: BidirectionalIterator,
 }
 
 pub enum RC500Event {
@@ -76,13 +75,15 @@ pub enum RC500Event {
     RhythmVariation(),
     RhythmPatternUp(),
     RhythmPatternDown(),
+    DrumkitsUp(),
+    DrumkitsDown(),
 }
 
 impl RC500 {
     pub fn new() -> Self {
         Self {
-            kit: Kit::new(),
-            pattern: Pattern::new(),
+            drumkits: BidirectionalIterator::new(Control::new(8)),
+            patterns: BidirectionalIterator::new(Control::new(7)),
         }
     }
     pub fn midi_messages(&mut self, event: RC500Event) -> Vec<MidiMessage, MAX_CAPACITY> {
@@ -103,8 +104,10 @@ impl RC500 {
             RC500Event::ToggleRhythm() => toggle(Control::new(4)),
             RC500Event::RhythmVariation() => toggle(Control::new(5)),
             RC500Event::LoopEffect() => toggle(Control::new(6)),
-            RC500Event::RhythmPatternUp() => self.pattern.up(),
-            RC500Event::RhythmPatternDown() => self.pattern.down(),
+            RC500Event::RhythmPatternUp() => self.patterns.up(&PATTERNS),
+            RC500Event::RhythmPatternDown() => self.patterns.down(&PATTERNS),
+            RC500Event::DrumkitsUp() => self.drumkits.up(&DRUMKITS),
+            RC500Event::DrumkitsDown() => self.drumkits.down(&DRUMKITS),
         }
     }
 }
