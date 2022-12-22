@@ -48,14 +48,19 @@ impl BidirectionalIterator {
     }
     fn current(&self, values: &[u8]) -> Vec<MidiMessage, MAX_CAPACITY> {
         let mut messages: Vec<MidiMessage, MAX_CAPACITY> = Vec::new();
-        messages
-            .push(MidiMessage::ControlChange(
-                RC500_CHANNEL,
-                self.control,
-                Value7::new(values[self.current]),
-            ))
-            .unwrap();
-        messages
+        match values.get(self.current) {
+            Some(value) => {
+                messages
+                    .push(MidiMessage::ControlChange(
+                        RC500_CHANNEL,
+                        self.control,
+                        Value7::new(*value),
+                    ))
+                    .unwrap();
+                messages
+            }
+            None => messages,
+        }
     }
 }
 
