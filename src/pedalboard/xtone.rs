@@ -1,5 +1,5 @@
 use crate::pedalboard::plethora::Plethora;
-use crate::pedalboard::rc500::{RC500Event, RC500};
+use crate::pedalboard::rc500::{Direction, RC500Event, RC500};
 use heapless::Vec;
 use midi_types::{Channel, Control, MidiMessage, Value7};
 
@@ -44,8 +44,8 @@ pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMes
         XTONE_BLUE_A => rc500.midi_messages(RC500Event::ToggleRhythm()),
         XTONE_BLUE_B => rc500.midi_messages(RC500Event::RhythmVariation()),
         XTONE_BLUE_C => rc500.midi_messages(RC500Event::LoopEffect()),
-        XTONE_BLUE_D => rc500.midi_messages(RC500Event::MemUp()),
-        XTONE_BLUE_E => rc500.midi_messages(RC500Event::MemDown()),
+        XTONE_BLUE_D => rc500.midi_messages(RC500Event::Mem(Direction::Up)),
+        XTONE_BLUE_E => rc500.midi_messages(RC500Event::Mem(Direction::Down)),
         XTONE_BLUE_F => rc500.midi_messages(RC500Event::ClearCurrent()),
         XTONE_BLUE_EXP => Plethora::HotKnob(1, value).midi_messages(),
 

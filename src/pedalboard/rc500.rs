@@ -17,6 +17,11 @@ const DRUMKITS: [u8; 16] = [
 
 const MAX_CAPACITY: usize = 8;
 
+pub enum Direction {
+    Up,
+    Down,
+}
+
 struct BidirectionalIterator {
     current: usize,
     control: Control,
@@ -72,8 +77,7 @@ pub struct RC500 {
 pub enum RC500Event {
     #[allow(dead_code)]
     Memory(u8),
-    MemUp(),
-    MemDown(),
+    Mem(Direction),
     ClearCurrent(),
     ToggleRhythm(),
     LoopEffect(),
@@ -103,8 +107,13 @@ impl RC500 {
                     .unwrap();
                 messages
             }
-            RC500Event::MemUp() => toggle(Control::new(1)),
-            RC500Event::MemDown() => toggle(Control::new(2)),
+            RC500Event::Mem(dir) => {
+                let value = match dir {
+                    Direction::Up => 1,
+                    Direction::Down => 2,
+                };
+                toggle(Control::new(value))
+            }
             RC500Event::ClearCurrent() => toggle(Control::new(3)),
             RC500Event::ToggleRhythm() => toggle(Control::new(4)),
             RC500Event::RhythmVariation() => toggle(Control::new(5)),
