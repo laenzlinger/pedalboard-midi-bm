@@ -107,17 +107,14 @@ impl RC500 {
                     .unwrap();
                 messages
             }
-            RC500Event::Mem(dir) => {
-                let value = match dir {
-                    Direction::Up => 1,
-                    Direction::Down => 2,
-                };
-                toggle(Control::new(value))
-            }
-            RC500Event::ClearCurrent() => toggle(Control::new(3)),
-            RC500Event::ToggleRhythm() => toggle(Control::new(4)),
-            RC500Event::RhythmVariation() => toggle(Control::new(5)),
-            RC500Event::LoopEffect() => toggle(Control::new(6)),
+            RC500Event::Mem(dir) => match dir {
+                Direction::Up => toggle(1),
+                Direction::Down => toggle(2),
+            },
+            RC500Event::ClearCurrent() => toggle(3),
+            RC500Event::ToggleRhythm() => toggle(4),
+            RC500Event::RhythmVariation() => toggle(5),
+            RC500Event::LoopEffect() => toggle(6),
             RC500Event::RhythmPatternUp() => self.patterns.up(&PATTERNS),
             RC500Event::RhythmPatternDown() => self.patterns.down(&PATTERNS),
             RC500Event::DrumkitsUp() => self.drumkits.up(&DRUMKITS),
@@ -126,7 +123,8 @@ impl RC500 {
     }
 }
 
-fn toggle(c: Control) -> Vec<MidiMessage, MAX_CAPACITY> {
+fn toggle(control: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
+    let c = Control::new(control);
     let mut messages: Vec<MidiMessage, MAX_CAPACITY> = Vec::new();
     messages
         .push(MidiMessage::ControlChange(RC500_CHANNEL, c, MAX_VALUE))
