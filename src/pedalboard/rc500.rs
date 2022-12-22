@@ -55,7 +55,7 @@ impl BidirectionalIterator {
 
     fn current(&self, values: &[u8]) -> Vec<MidiMessage, MAX_CAPACITY> {
         match values.get(self.current) {
-            Some(value) => control(self.control, *value),
+            Some(value) => control_change(self.control, *value),
             None => empty(),
         }
     }
@@ -89,15 +89,15 @@ impl RC500 {
     }
     pub fn midi_messages(&mut self, event: RC500Event) -> Vec<MidiMessage, MAX_CAPACITY> {
         match event {
-            RC500Event::Memory(nr) => programChange(Program::new(nr - 1)),
+            RC500Event::Memory(nr) => program_change(Program::new(nr - 1)),
             RC500Event::Mem(dir) => match dir {
-                Direction::Up => controlToggle(1),
-                Direction::Down => controlToggle(2),
+                Direction::Up => control_toggle(1),
+                Direction::Down => control_toggle(2),
             },
-            RC500Event::ClearCurrent() => controlToggle(3),
-            RC500Event::ToggleRhythm() => controlToggle(4),
-            RC500Event::RhythmVariation() => controlToggle(5),
-            RC500Event::LoopEffect() => controlToggle(6),
+            RC500Event::ClearCurrent() => control_toggle(3),
+            RC500Event::ToggleRhythm() => control_toggle(4),
+            RC500Event::RhythmVariation() => control_toggle(5),
+            RC500Event::LoopEffect() => control_toggle(6),
             RC500Event::RhythmPatternUp() => self.patterns.up(&PATTERNS),
             RC500Event::RhythmPatternDown() => self.patterns.down(&PATTERNS),
             RC500Event::DrumkitsUp() => self.drumkits.up(&DRUMKITS),
@@ -106,7 +106,7 @@ impl RC500 {
     }
 }
 
-fn controlToggle(control: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
+fn control_toggle(control: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
     let c = Control::new(control);
     let mut messages = empty();
     messages
@@ -118,7 +118,7 @@ fn controlToggle(control: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
     messages
 }
 
-fn controlChange(control: Control, value: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
+fn control_change(control: Control, value: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
     let mut messages = empty();
     messages
         .push(MidiMessage::ControlChange(
@@ -130,7 +130,7 @@ fn controlChange(control: Control, value: u8) -> Vec<MidiMessage, MAX_CAPACITY> 
     messages
 }
 
-fn programChange(program: Program) -> Vec<MidiMessage, MAX_CAPACITY> {
+fn program_change(program: Program) -> Vec<MidiMessage, MAX_CAPACITY> {
     let mut messages = empty();
     messages
         .push(MidiMessage::ProgramChange(RC500_CHANNEL, program))
