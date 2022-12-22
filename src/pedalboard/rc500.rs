@@ -52,7 +52,7 @@ impl BidirectionalIterator {
         self.current(values)
     }
     fn current(&self, values: &[u8]) -> Vec<MidiMessage, MAX_CAPACITY> {
-        let mut messages: Vec<MidiMessage, MAX_CAPACITY> = Vec::new();
+        let mut messages = empty();
         match values.get(self.current) {
             Some(value) => {
                 messages
@@ -98,7 +98,7 @@ impl RC500 {
     pub fn midi_messages(&mut self, event: RC500Event) -> Vec<MidiMessage, MAX_CAPACITY> {
         match event {
             RC500Event::Memory(nr) => {
-                let mut messages: Vec<MidiMessage, MAX_CAPACITY> = Vec::new();
+                let mut messages = empty();
                 messages
                     .push(MidiMessage::ProgramChange(
                         RC500_CHANNEL,
@@ -125,7 +125,7 @@ impl RC500 {
 
 fn toggle(control: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
     let c = Control::new(control);
-    let mut messages: Vec<MidiMessage, MAX_CAPACITY> = Vec::new();
+    let mut messages = empty();
     messages
         .push(MidiMessage::ControlChange(RC500_CHANNEL, c, MAX_VALUE))
         .unwrap();
@@ -133,4 +133,8 @@ fn toggle(control: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
         .push(MidiMessage::ControlChange(RC500_CHANNEL, c, MIN_VALUE))
         .unwrap();
     messages
+}
+
+fn empty() -> Vec<MidiMessage, MAX_CAPACITY> {
+    Vec::new()
 }
