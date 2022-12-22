@@ -84,6 +84,7 @@ pub enum RC500Event {
     RhythmPattern(Direction),
     DrumKit(Direction),
 }
+
 impl Default for RC500 {
     fn default() -> Self {
         Self::new()
