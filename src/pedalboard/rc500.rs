@@ -82,8 +82,7 @@ pub enum RC500Event {
     LoopEffect(),
     RhythmVariation(),
     RhythmPattern(Direction),
-    DrumkitsUp(),
-    DrumkitsDown(),
+    Drumkits(Direction),
 }
 
 impl RC500 {
@@ -105,8 +104,7 @@ impl RC500 {
             RC500Event::RhythmVariation() => control_toggle(5),
             RC500Event::LoopEffect() => control_toggle(6),
             RC500Event::RhythmPattern(dir) => self.patterns.go(&PATTERNS, dir),
-            RC500Event::DrumkitsUp() => self.drumkits.up(&DRUMKITS),
-            RC500Event::DrumkitsDown() => self.drumkits.down(&DRUMKITS),
+            RC500Event::Drumkits(dir) => self.drumkits.go(&DRUMKITS, dir),
         }
     }
 }
