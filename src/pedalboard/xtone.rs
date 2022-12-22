@@ -39,7 +39,7 @@ pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMes
         XTONE_GREEN_D => Plethora::BoardUp.midi_messages(),
         XTONE_GREEN_E => Plethora::BoardDown.midi_messages(),
         XTONE_GREEN_F => NONE,
-        XTONE_GREEN_EXP => Plethora::HotKnob(1, value).midi_messages(),
+        XTONE_GREEN_EXP => Plethora::HotKnob(3, value).midi_messages(),
 
         XTONE_BLUE_A => rc500.midi_messages(RC500Event::ToggleRhythm()),
         XTONE_BLUE_B => rc500.midi_messages(RC500Event::RhythmVariation()),
@@ -47,7 +47,7 @@ pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMes
         XTONE_BLUE_D => rc500.midi_messages(RC500Event::Mem(Direction::Up)),
         XTONE_BLUE_E => rc500.midi_messages(RC500Event::Mem(Direction::Down)),
         XTONE_BLUE_F => rc500.midi_messages(RC500Event::ClearCurrent()),
-        XTONE_BLUE_EXP => Plethora::HotKnob(1, value).midi_messages(),
+        XTONE_BLUE_EXP => Plethora::HotKnob(3, value).midi_messages(),
 
         XTONE_RED_A => rc500.midi_messages(RC500Event::RhythmPattern(Direction::Down)),
         XTONE_RED_B => rc500.midi_messages(RC500Event::DrumKit(Direction::Down)),
@@ -55,7 +55,7 @@ pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMes
         XTONE_RED_D => rc500.midi_messages(RC500Event::RhythmPattern(Direction::Up)),
         XTONE_RED_E => rc500.midi_messages(RC500Event::DrumKit(Direction::Up)),
         XTONE_RED_F => NONE,
-        XTONE_RED_EXP => Plethora::HotKnob(1, value).midi_messages(),
+        XTONE_RED_EXP => Plethora::HotKnob(3, value).midi_messages(),
 
         _ => NONE,
     }
