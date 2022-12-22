@@ -35,6 +35,13 @@ impl BidirectionalIterator {
         }
     }
 
+    fn go(&mut self, values: &[u8], dir: Direction) -> Vec<MidiMessage, MAX_CAPACITY> {
+        match dir {
+            Direction::Up => self.up(values),
+            Direction::Down => self.down(values),
+        }
+    }
+
     fn up(&mut self, values: &[u8]) -> Vec<MidiMessage, MAX_CAPACITY> {
         if (self.current) < values.len() - 1 {
             self.current += 1;
@@ -74,8 +81,7 @@ pub enum RC500Event {
     ToggleRhythm(),
     LoopEffect(),
     RhythmVariation(),
-    RhythmPatternUp(),
-    RhythmPatternDown(),
+    RhythmPattern(Direction),
     DrumkitsUp(),
     DrumkitsDown(),
 }
@@ -98,8 +104,7 @@ impl RC500 {
             RC500Event::ToggleRhythm() => control_toggle(4),
             RC500Event::RhythmVariation() => control_toggle(5),
             RC500Event::LoopEffect() => control_toggle(6),
-            RC500Event::RhythmPatternUp() => self.patterns.up(&PATTERNS),
-            RC500Event::RhythmPatternDown() => self.patterns.down(&PATTERNS),
+            RC500Event::RhythmPattern(dir) => self.patterns.go(&PATTERNS, dir),
             RC500Event::DrumkitsUp() => self.drumkits.up(&DRUMKITS),
             RC500Event::DrumkitsDown() => self.drumkits.down(&DRUMKITS),
         }
