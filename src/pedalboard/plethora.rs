@@ -4,6 +4,7 @@ const PLETHORA_CHANNEL: Channel = Channel::new(1);
 
 const MAX_VALUE: Value7 = midi_types::Value7::new(127);
 
+#[allow(dead_code)]
 pub enum Plethora {
     Board(u8),
     BoardUp,
