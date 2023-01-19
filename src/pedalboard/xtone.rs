@@ -33,12 +33,12 @@ pub const NONE: Vec<MidiMessage, 8> = Vec::new();
 
 pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMessage, 8> {
     match control {
-        XTONE_GREEN_A => Plethora::Board(29).midi_messages(),
-        XTONE_GREEN_B => Plethora::Board(30).midi_messages(),
-        XTONE_GREEN_C => NONE,
+        XTONE_GREEN_A => Plethora::BoardDown.midi_messages(),
+        XTONE_GREEN_B => Plethora::Board(1).midi_messages(),
+        XTONE_GREEN_C => Plethora::Board(2).midi_messages(),
         XTONE_GREEN_D => Plethora::BoardUp.midi_messages(),
-        XTONE_GREEN_E => Plethora::BoardDown.midi_messages(),
-        XTONE_GREEN_F => NONE,
+        XTONE_GREEN_E => Plethora::Board(3).midi_messages(),
+        XTONE_GREEN_F => Plethora::Board(4).midi_messages(),
         XTONE_GREEN_EXP => Plethora::HotKnob(3, value).midi_messages(),
 
         XTONE_BLUE_A => rc500.midi_messages(RC500Event::ToggleRhythm()),
