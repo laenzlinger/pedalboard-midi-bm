@@ -3,6 +3,7 @@ use midi_types::{Channel, Control, MidiMessage, Program, Value7};
 const PLETHORA_CHANNEL: Channel = Channel::new(1);
 
 const MAX_VALUE: Value7 = midi_types::Value7::new(127);
+const MIN_VALUE: Value7 = midi_types::Value7::new(0);
 
 #[allow(dead_code)]
 pub enum Plethora {
@@ -14,21 +15,58 @@ pub enum Plethora {
 impl Plethora {
     pub fn midi_messages(&self) -> Vec<MidiMessage, 8> {
         let mut messages: Vec<MidiMessage, 8> = Vec::new();
-        let m = match *self {
-            Plethora::BoardUp => {
-                MidiMessage::ControlChange(PLETHORA_CHANNEL, Control::new(95), MAX_VALUE)
-            }
-            Plethora::BoardDown => {
-                MidiMessage::ControlChange(PLETHORA_CHANNEL, Control::new(94), MAX_VALUE)
-            }
+        match *self {
+            Plethora::BoardUp => messages
+                .push(MidiMessage::ControlChange(
+                    PLETHORA_CHANNEL,
+                    Control::new(95),
+                    MAX_VALUE,
+                ))
+                .unwrap(),
+            Plethora::BoardDown => messages
+                .push(MidiMessage::ControlChange(
+                    PLETHORA_CHANNEL,
+                    Control::new(94),
+                    MAX_VALUE,
+                ))
+                .unwrap(),
             Plethora::Board(nr) => {
-                MidiMessage::ProgramChange(PLETHORA_CHANNEL, Program::new(nr - 1))
+                messages
+                    .push(MidiMessage::ControlChange(
+                        PLETHORA_CHANNEL,
+                        Control::new(102),
+                        MIN_VALUE,
+                    ))
+                    .unwrap();
+                messages
+                    .push(MidiMessage::ControlChange(
+                        PLETHORA_CHANNEL,
+                        Control::new(103),
+                        MIN_VALUE,
+                    ))
+                    .unwrap();
+                messages
+                    .push(MidiMessage::ControlChange(
+                        PLETHORA_CHANNEL,
+                        Control::new(104),
+                        MIN_VALUE,
+                    ))
+                    .unwrap();
+                messages
+                    .push(MidiMessage::ProgramChange(
+                        PLETHORA_CHANNEL,
+                        Program::new(nr - 1),
+                    ))
+                    .unwrap();
             }
-            Plethora::HotKnob(nr, value) => {
-                MidiMessage::ControlChange(PLETHORA_CHANNEL, Control::new(106 + nr), value)
-            }
+            Plethora::HotKnob(nr, value) => messages
+                .push(MidiMessage::ControlChange(
+                    PLETHORA_CHANNEL,
+                    Control::new(106 + nr),
+                    value,
+                ))
+                .unwrap(),
         };
-        messages.push(m).unwrap();
         messages
     }
 }
