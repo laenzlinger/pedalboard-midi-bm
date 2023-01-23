@@ -24,10 +24,10 @@ The target hardware is a Adafruit [MIDI Feather Wing](https://www.adafruit.com/p
 ## Development
 This project was generated with the [RP2040 Project Teamplate](https://github.com/rp-rs/rp2040-project-template)
 
-## Deploment
+## Deploment (Linux Host)
+
+The firmware supports No-Button-Boot (nbb) bootsel mode via USB serial interface.
 
 1. Connect USB C cable to Feather
-2. Press Boot Switch on Feather
-3. Connect USB C cable to Computer
-4. Run `cargo run --release`
+4. Run `make deploy`
 5. Remove USB C cable from Feater
