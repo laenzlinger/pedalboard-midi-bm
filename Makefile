@@ -17,7 +17,7 @@ run: ## build and run
 bootsel: ## restart the RP2040 in bootsel mode
 	echo "z" > /dev/ttyACM0
 
-deploy: bootsel mount build ## mount and deploy to RP2040
+deploy: bootsel mount run ## mount and deploy to RP2040
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
