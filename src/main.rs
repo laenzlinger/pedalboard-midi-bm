@@ -93,8 +93,8 @@ fn main() -> ! {
     }
 
     // Create a USB device with a fake VID and PID
-    let usb_dev = UsbDeviceBuilder::new(bus_ref, UsbVidPid(0x16c0, 0x27dd))
-        .manufacturer("laenzi")
+    let usb_dev = UsbDeviceBuilder::new(bus_ref, UsbVidPid(0x2E8A, 0x0005))
+        .manufacturer("laenzlinger")
         .product("pedalboard-midi")
         .serial_number("0.0.1")
         .device_class(2) // from: https://www.usb.org/defined-class-codes
