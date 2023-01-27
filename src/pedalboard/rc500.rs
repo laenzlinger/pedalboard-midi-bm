@@ -79,7 +79,7 @@ pub enum RC500Event {
     Mem(Direction),
     ClearCurrent(),
     ToggleRhythm(),
-    CurrentChannelLevelRelative(Value7),
+    CurrentChannelLevel(Value7),
     RhythmVariation(),
     RhythmPattern(Direction),
     DrumKit(Direction),
@@ -108,9 +108,7 @@ impl RC500 {
             RC500Event::ClearCurrent() => control_toggle(3),
             RC500Event::ToggleRhythm() => control_toggle(4),
             RC500Event::RhythmVariation() => control_toggle(5),
-            RC500Event::CurrentChannelLevelRelative(value) => {
-                control_change(Control::new(6), value)
-            }
+            RC500Event::CurrentChannelLevel(value) => control_change(Control::new(6), value),
             RC500Event::RhythmPattern(dir) => self.patterns.go(&PATTERNS, dir),
             RC500Event::DrumKit(dir) => self.drumkits.go(&DRUMKITS, dir),
         }

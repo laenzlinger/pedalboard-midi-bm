@@ -47,7 +47,7 @@ pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMes
         XTONE_BLUE_D => rc500.midi_messages(RC500Event::Mem(Direction::Up)),
         XTONE_BLUE_E => rc500.midi_messages(RC500Event::Mem(Direction::Down)),
         XTONE_BLUE_F => rc500.midi_messages(RC500Event::ClearCurrent()),
-        XTONE_BLUE_EXP => rc500.midi_messages(RC500Event::CurrentChannelLevelRelative(value)),
+        XTONE_BLUE_EXP => rc500.midi_messages(RC500Event::CurrentChannelLevel(value)),
 
         XTONE_RED_A => rc500.midi_messages(RC500Event::RhythmPattern(Direction::Down)),
         XTONE_RED_B => rc500.midi_messages(RC500Event::DrumKit(Direction::Down)),
