@@ -31,7 +31,7 @@ const XTONE_RED_EXP: Control = Control::new(1);
 
 pub const NONE: Vec<MidiMessage, 8> = Vec::new();
 
-pub fn handle(rc500: &mut RC500, control: Control, _value: Value7) -> Vec<MidiMessage, 8> {
+pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMessage, 8> {
     match control {
         XTONE_GREEN_A => Plethora::BoardDown.midi_messages(),
         XTONE_GREEN_B => Plethora::Board(1).midi_messages(),
@@ -43,7 +43,7 @@ pub fn handle(rc500: &mut RC500, control: Control, _value: Value7) -> Vec<MidiMe
 
         XTONE_BLUE_A => rc500.midi_messages(RC500Event::ToggleRhythm()),
         XTONE_BLUE_B => rc500.midi_messages(RC500Event::RhythmVariation()),
-        XTONE_BLUE_C => rc500.midi_messages(RC500Event::LoopEffect()),
+        XTONE_BLUE_C => rc500.midi_messages(RC500Event::CurrentChannelLevelRelative(value)),
         XTONE_BLUE_D => rc500.midi_messages(RC500Event::Mem(Direction::Up)),
         XTONE_BLUE_E => rc500.midi_messages(RC500Event::Mem(Direction::Down)),
         XTONE_BLUE_F => rc500.midi_messages(RC500Event::ClearCurrent()),

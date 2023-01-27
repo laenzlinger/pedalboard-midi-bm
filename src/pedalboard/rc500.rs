@@ -62,7 +62,7 @@ impl BidirectionalIterator {
 
     fn current(&self, values: &[u8]) -> Vec<MidiMessage, MAX_CAPACITY> {
         match values.get(self.current) {
-            Some(value) => control_change(self.control, *value),
+            Some(value) => control_change(self.control, Value7::new(*value)),
             None => empty(),
         }
     }
@@ -79,7 +79,7 @@ pub enum RC500Event {
     Mem(Direction),
     ClearCurrent(),
     ToggleRhythm(),
-    LoopEffect(),
+    CurrentChannelLevelRelative(Value7),
     RhythmVariation(),
     RhythmPattern(Direction),
     DrumKit(Direction),
@@ -108,7 +108,9 @@ impl RC500 {
             RC500Event::ClearCurrent() => control_toggle(3),
             RC500Event::ToggleRhythm() => control_toggle(4),
             RC500Event::RhythmVariation() => control_toggle(5),
-            RC500Event::LoopEffect() => control_toggle(6),
+            RC500Event::CurrentChannelLevelRelative(value) => {
+                control_change(Control::new(6), value)
+            }
             RC500Event::RhythmPattern(dir) => self.patterns.go(&PATTERNS, dir),
             RC500Event::DrumKit(dir) => self.drumkits.go(&DRUMKITS, dir),
         }
@@ -127,14 +129,10 @@ fn control_toggle(control: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
     messages
 }
 
-fn control_change(control: Control, value: u8) -> Vec<MidiMessage, MAX_CAPACITY> {
+fn control_change(control: Control, value: Value7) -> Vec<MidiMessage, MAX_CAPACITY> {
     let mut messages = empty();
     messages
-        .push(MidiMessage::ControlChange(
-            RC500_CHANNEL,
-            control,
-            Value7::new(value),
-        ))
+        .push(MidiMessage::ControlChange(RC500_CHANNEL, control, value))
         .unwrap();
     messages
 }
