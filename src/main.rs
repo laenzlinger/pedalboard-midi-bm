@@ -115,6 +115,8 @@ fn main() -> ! {
         sio.gpio_bank0,
         &mut pac.RESETS,
     );
+    let mut led_pin = pins.led.into_push_pull_output(); 
+    led_pin.set_high().unwrap();
 
     let uart_pins = (
         pins.tx.into_mode::<bsp::hal::gpio::FunctionUart>(),
