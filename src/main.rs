@@ -8,7 +8,7 @@ pub mod pedalboard;
 use adafruit_feather_rp2040::entry;
 use defmt::*;
 use defmt_rtt as _;
-use embedded_hal::digital::v2::OutputPin;
+use embedded_hal::digital::v2::{OutputPin, ToggleableOutputPin};
 use embedded_midi::{MidiIn, MidiOut};
 use fugit::HertzU32;
 use nb::block;
@@ -145,6 +145,8 @@ fn main() -> ! {
     loop {
         if let Ok(event) = block!(midi_in.read()) {
             info!("received {}", event);
+
+            led_pin.toggle();
 
             let messages = pedalboard::handle(event, &mut rc);
             for m in messages.into_iter() {
