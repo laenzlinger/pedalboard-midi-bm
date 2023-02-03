@@ -146,7 +146,7 @@ fn main() -> ! {
         if let Ok(event) = block!(midi_in.read()) {
             info!("received {}", event);
 
-            led_pin.toggle();
+            led_pin.toggle().unwrap();
 
             let messages = pedalboard::handle(event, &mut rc);
             for m in messages.into_iter() {
