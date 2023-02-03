@@ -8,6 +8,7 @@ pub mod pedalboard;
 use adafruit_feather_rp2040::entry;
 use defmt::*;
 use defmt_rtt as _;
+use embedded_hal::digital::v2::OutputPin;
 use embedded_midi::{MidiIn, MidiOut};
 use fugit::HertzU32;
 use nb::block;
@@ -115,7 +116,7 @@ fn main() -> ! {
         sio.gpio_bank0,
         &mut pac.RESETS,
     );
-    let mut led_pin = pins.led.into_push_pull_output(); 
+    let mut led_pin = pins.d13.into_push_pull_output();
     led_pin.set_high().unwrap();
 
     let uart_pins = (
