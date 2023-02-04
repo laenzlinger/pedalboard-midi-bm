@@ -39,7 +39,7 @@ static mut USB_SERIAL: Option<SerialPort<bsp::hal::usb::UsbBus>> = None;
 use bsp::hal::pac::interrupt;
 
 use core::iter::once;
-use smart_leds::{brightness, SmartLedsWrite, RGB8};
+use smart_leds::{brightness, SmartLedsWrite};
 use ws2812_pio::Ws2812;
 
 use bsp::{
@@ -137,9 +137,6 @@ fn main() -> ! {
         clocks.peripheral_clock.freq(),
         timer.count_down(),
     );
-    ws.write(brightness(once(RGB8::new(255, 161, 0)), 255))
-        .unwrap();
-
     let uart_pins = (
         pins.tx.into_mode::<bsp::hal::gpio::FunctionUart>(),
         pins.rx.into_mode::<bsp::hal::gpio::FunctionUart>(),
@@ -169,10 +166,17 @@ fn main() -> ! {
 
             led_pin.toggle().unwrap();
 
-            let messages = pedalboard::handle(event, &mut rc);
-            for m in messages.into_iter() {
+            let result = pedalboard::handle(event, &mut rc);
+            for m in result.messages.into_iter() {
                 info!("send {}", m);
                 midi_out.write(&m).ok();
+            }
+
+            match result.pixel {
+                Some(color) => {
+                    ws.write(brightness(once(color), 255)).unwrap();
+                }
+                None => {}
             }
         }
     }

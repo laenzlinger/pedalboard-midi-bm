@@ -2,6 +2,7 @@ use crate::pedalboard::plethora::Plethora;
 use crate::pedalboard::rc500::{Direction, RC500Event, RC500};
 use heapless::Vec;
 use midi_types::{Channel, Control, MidiMessage, Value7};
+use smart_leds::RGB8;
 
 pub const CHANNEL: Channel = Channel::new(0);
 
@@ -29,10 +30,24 @@ const XTONE_RED_E: Control = Control::new(74);
 const XTONE_RED_F: Control = Control::new(75);
 const XTONE_RED_EXP: Control = Control::new(1);
 
-pub const NONE: Vec<MidiMessage, 8> = Vec::new();
+const NONE: Vec<MidiMessage, 8> = Vec::new();
 
-pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMessage, 8> {
-    match control {
+pub struct EventResult {
+    pub messages: Vec<MidiMessage, 8>,
+    pub pixel: Option<RGB8>,
+}
+
+impl EventResult {
+    pub fn none() -> EventResult {
+        EventResult {
+            messages: NONE,
+            pixel: None,
+        }
+    }
+}
+
+pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> EventResult {
+    let messages = match control {
         XTONE_GREEN_A => Plethora::BoardDown.midi_messages(),
         XTONE_GREEN_B => Plethora::Board(1).midi_messages(),
         XTONE_GREEN_C => Plethora::Board(2).midi_messages(),
@@ -58,5 +73,15 @@ pub fn handle(rc500: &mut RC500, control: Control, value: Value7) -> Vec<MidiMes
         XTONE_RED_EXP => NONE,
 
         _ => NONE,
-    }
+    };
+    let pixel = match control {
+        XTONE_RED_A | XTONE_RED_B | XTONE_RED_C | XTONE_RED_D | XTONE_RED_E | XTONE_RED_F
+        | XTONE_RED_EXP => Some(smart_leds::RGB8::new(255, 8, 8)),
+        XTONE_BLUE_A | XTONE_BLUE_B | XTONE_BLUE_C | XTONE_BLUE_D | XTONE_BLUE_E | XTONE_BLUE_F
+        | XTONE_BLUE_EXP => Some(smart_leds::RGB8::new(8, 8, 255)),
+        XTONE_GREEN_A | XTONE_GREEN_B | XTONE_GREEN_C | XTONE_GREEN_D | XTONE_GREEN_E
+        | XTONE_GREEN_F | XTONE_GREEN_EXP => Some(smart_leds::RGB8::new(8, 255, 8)),
+        _ => None,
+    };
+    EventResult { messages, pixel }
 }
