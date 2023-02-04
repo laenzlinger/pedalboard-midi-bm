@@ -24,6 +24,17 @@ The target hardware is a Adafruit [MIDI Feather Wing](https://www.adafruit.com/p
 ## Development
 This project was generated with the [RP2040 Project Teamplate](https://github.com/rp-rs/rp2040-project-template)
 
+### Dependencies
+
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup target add thumbv6m-none-eabi
+cargo install flip-link
+sudo apt-get install libudev-dev
+cargo install elf2uf2-rs
+```
+
+
 ## Deploment (Linux Host)
 
 The firmware supports No-Button-Boot (nbb) bootsel mode via USB serial interface.
