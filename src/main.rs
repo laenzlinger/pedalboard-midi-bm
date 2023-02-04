@@ -137,7 +137,7 @@ fn main() -> ! {
         clocks.peripheral_clock.freq(),
         timer.count_down(),
     );
-    ws.write(brightness(once(RGB8::new(255, 8, 8)), 32))
+    ws.write(brightness(once(RGB8::new(255, 161, 0)), 255))
         .unwrap();
 
     let uart_pins = (
