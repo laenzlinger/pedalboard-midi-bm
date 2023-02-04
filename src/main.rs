@@ -38,13 +38,19 @@ static mut USB_SERIAL: Option<SerialPort<bsp::hal::usb::UsbBus>> = None;
 // The macro for marking our interrupt functions
 use bsp::hal::pac::interrupt;
 
+use core::iter::once;
+use smart_leds::{brightness, SmartLedsWrite, RGB8};
+use ws2812_pio::Ws2812;
+
 use bsp::{
     hal::{
         clocks::{init_clocks_and_plls, Clock},
         pac,
+        pio::PIOExt,
         sio::Sio,
         uart::{DataBits, StopBits, UartConfig, UartPeripheral},
         watchdog::Watchdog,
+        Timer,
     },
     Pins, XOSC_CRYSTAL_FREQ,
 };
@@ -116,8 +122,23 @@ fn main() -> ! {
         sio.gpio_bank0,
         &mut pac.RESETS,
     );
+
+    // leds
     let mut led_pin = pins.d13.into_push_pull_output();
     led_pin.set_high().unwrap();
+
+    let timer = Timer::new(pac.TIMER, &mut pac.RESETS);
+    let (mut pio, sm0, _, _, _) = pac.PIO0.split(&mut pac.RESETS);
+    let mut ws = Ws2812::new(
+        // The onboard NeoPixel is attached to GPIO pin #16 on the Feather RP2040.
+        pins.neopixel.into_mode(),
+        &mut pio,
+        sm0,
+        clocks.peripheral_clock.freq(),
+        timer.count_down(),
+    );
+    ws.write(brightness(once(RGB8::new(255, 8, 8)), 32))
+        .unwrap();
 
     let uart_pins = (
         pins.tx.into_mode::<bsp::hal::gpio::FunctionUart>(),
