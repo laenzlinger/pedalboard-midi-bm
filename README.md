@@ -17,7 +17,7 @@ The target hardware is a Adafruit [MIDI Feather Wing](https://www.adafruit.com/p
 
 ### Wiring 
 
-![Feather stack](doc/XTone Rebuild_bb.png)
+![Breadboard Wiring](doc/wiring.png)
 
 ## Development
 This project was generated with the [RP2040 Project Teamplate](https://github.com/rp-rs/rp2040-project-template)
