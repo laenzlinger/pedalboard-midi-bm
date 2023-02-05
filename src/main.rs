@@ -171,13 +171,9 @@ fn main() -> ! {
                 info!("send {}", m);
                 midi_out.write(&m).ok();
             }
-
-            match result.pixel {
-                Some(color) => {
-                    ws.write(brightness(once(color), 255)).unwrap();
-                }
-                None => {}
-            }
+            if let Some(color) = result.pixel {
+                ws.write(brightness(once(color), 255)).unwrap();
+            };
         }
     }
 }
