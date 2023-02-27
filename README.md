@@ -1,5 +1,9 @@
 # Pedalboard Midi Adapter
 
+IMPORTANT: This project is not maintained or further developed anymore. I have desided to start an own hardware project.
+see https://github.com/laenzlinger/pedalboard-midi for a next iteration for the midi part of the design.
+
+
 This project implements a MIDI adapter for my pedalboard
 
 The midi devices are daisy chained with MIDI cables in the following order:
